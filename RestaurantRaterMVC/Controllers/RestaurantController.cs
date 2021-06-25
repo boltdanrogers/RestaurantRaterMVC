@@ -40,8 +40,38 @@ namespace RestaurantRaterMVC.Controllers
             //only get here is modelState is invalid
             return View(restaurant);
 
-
         }//end of method Create
+
+        //GET: Restaurant/Delete/{id}
+        public ActionResult Delete(int? id)
+        {
+            if(id==null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }//end of if id is null
+            Restaurant restaurant = _db.Restaurants.Find(id);
+            if(restaurant==null)
+            {
+                return HttpNotFound();
+            }//end of if restaurant is null
+            
+            //only gets here if id is not null and restaurant is returned.
+            return View(restaurant);
+
+
+        }//end of method Delete
+
+        //POST: Restaurant/Delete/{id}
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
+        {
+            Restaurant restaurant = _db.Restaurants.Find(id);
+            _db.Restaurants.Remove(restaurant);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+
+        }//end of method Delete
 
 
     }//end of class RestaurantController
